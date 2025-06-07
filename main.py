@@ -6,7 +6,6 @@ from ttkbootstrap.constants import *
 from tkinter import filedialog, messagebox
 import numpy as np
 
-# Класс для задачи о рюкзаке
 class Knapsack:
     def __init__(self, items, max_weight):
         self.items = items
@@ -89,53 +88,48 @@ class KnapsackApp:
     def __init__(self, root):
         self.root = root
         self.root.title("Knapsack Problem - Harmony Search")
-        self.style = ttk.Style("darkly")  # Начальная тема
-        self.current_theme = "darkly"  # Отслеживание текущей темы
+        self.style = ttk.Style("darkly")
+        self.current_theme = "darkly" 
         self.items = []
         self.params = {"max_weight": 0, "hms": 10, "hmcr": 0.9, "par": 0.3, "max_iter": 100, "vary_param": "hms", "vary_values": [5, 10, 20]}
         self.convergence_data = []
         self.execution_times = []
         self.best_iterations = []
 
-        # Адаптация к размеру окна
         self.root.columnconfigure(0, weight=1)
         self.root.rowconfigure(0, weight=1)
 
-        # Основной фрейм
         self.main_frame = ttk.Frame(self.root, padding=10)
         self.main_frame.grid(row=0, column=0, sticky=(N, S, E, W))
         self.main_frame.columnconfigure(0, weight=1)
         self.main_frame.columnconfigure(1, weight=1)
         self.main_frame.columnconfigure(2, weight=1)
-        self.main_frame.columnconfigure(3, weight=1)  # Добавляем новую колонку для кнопки смены темы
+        self.main_frame.columnconfigure(3, weight=1)
         self.main_frame.rowconfigure(1, weight=1)
 
-        # Кнопки для загрузки файлов и смены темы
         ttk.Button(self.main_frame, text="Load Items", command=self.load_items).grid(row=0, column=0, padx=5, pady=5, sticky=(E, W))
         ttk.Button(self.main_frame, text="Load Parameters", command=self.load_params).grid(row=0, column=1, padx=5, pady=5, sticky=(E, W))
         ttk.Button(self.main_frame, text="Run Algorithm", command=self.run_algorithm).grid(row=0, column=2, padx=5, pady=5, sticky=(E, W))
         self.theme_button = ttk.Button(self.main_frame, text="Switch to Light Theme", command=self.toggle_theme)
         self.theme_button.grid(row=0, column=3, padx=5, pady=5, sticky=(E, W))
 
-        # Текстовое поле для вывода результатов
         self.result_text = ttk.Text(self.main_frame, height=10, width=50)
-        self.result_text.grid(row=1, column=0, columnspan=4, pady=10, sticky=(N, S, E, W))  # Обновляем columnspan
+        self.result_text.grid(row=1, column=0, columnspan=4, pady=10, sticky=(N, S, E, W)) 
 
-        # Кнопка для построения графика
         ttk.Button(self.main_frame, text="Show Convergence Plot", command=self.plot_convergence).grid(row=2, column=0, columnspan=4, padx=5, pady=5, sticky=(E, W))  # Обновляем columnspan
 
     def toggle_theme(self):
         """Переключение между светлой и темной темой"""
         if self.current_theme == "darkly":
-            self.style.theme_use("litera")  # Светлая тема
+            self.style.theme_use("litera")  
             self.current_theme = "litera"
             self.theme_button.configure(text="Switch to Dark Theme")
-            plt.style.use('default')  # Светлый стиль для графиков
+            plt.style.use('default')  
         else:
-            self.style.theme_use("darkly")  # Темная тема
+            self.style.theme_use("darkly")  
             self.current_theme = "darkly"
             self.theme_button.configure(text="Switch to Light Theme")
-            plt.style.use('dark_background')  # Темный стиль для графиков
+            plt.style.use('dark_background') 
 
     def load_items(self):
         file_path = filedialog.askopenfilename(filetypes=[("Text files", "*.txt")])
@@ -156,7 +150,6 @@ class KnapsackApp:
                 with open(file_path, 'r') as f:
                     lines = f.readlines()
                     vary_param = lines[5].strip()
-                    # Конвертация vary_values в зависимости от типа параметра
                     if vary_param in ["hms", "max_iter"]:
                         vary_values = [int(float(x)) for x in lines[6].strip().split()]
                     else:
@@ -229,7 +222,6 @@ class KnapsackApp:
             messagebox.showerror("Error", "Run the algorithm first!")
             return
 
-        # Используем стиль графика в зависимости от текущей темы
         plt.style.use('default' if self.current_theme == "litera" else 'dark_background')
         fig, ax = plt.subplots()
         param_to_vary = self.params["vary_param"]
